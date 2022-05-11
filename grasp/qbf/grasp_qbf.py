@@ -68,8 +68,7 @@ class GRASP_QBF(GRASP):
 
             # Implement the best move, if it reduces the solution cost
             # Otherwise, we are done.
-            if min_delta_cost != -inf:
-                #print(f"local >{cl}, in: {best_cand_in}, out: {best_cand_out}, delta: {min_delta_cost}")
+            if min_delta_cost < 0:
                 if best_cand_out is not None:
                     self.sol.remove(best_cand_out)
                     cl.append(best_cand_out)
@@ -77,7 +76,7 @@ class GRASP_QBF(GRASP):
                     self.sol.append(best_cand_in)
                     cl.remove(best_cand_in)
                 self.obj_function.evaluate(self.sol)
-            if min_delta_cost == 0:
+            else:
                 break
 
 if __name__ == "__main__":

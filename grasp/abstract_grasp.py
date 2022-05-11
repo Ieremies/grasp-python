@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from math import inf
-from random import randrange
+from random import choice
 from typing import Iterable
 from datetime import datetime
 
@@ -10,7 +10,7 @@ from grasp.solution import Solution
 
 class GRASP(ABC):
     verbose = True
-    rng = randrange
+    rng = choice
     sol = Solution()
 
     @abstractmethod
@@ -53,24 +53,19 @@ class GRASP(ABC):
 
             # Explore all candidate elements to enter the solution, saving the
             # highest and lowest cost variation achieved by the candidates.
-            for c in cl:
-                delta_cost = self.obj_function.evaluate_insertion_cost(c, sol)
-                if delta_cost < min_cost:
-                    min_cost = delta_cost
-                if delta_cost > max_cost:
-                    max_cost = delta_cost
+            def eva(k):
+                return self.obj_function.evaluate_insertion_cost(k, sol)
+            min_cost = min(cl, key=eva)
+            max_cost = max(cl, key=eva)
 
             # Among all candidates, insert into the RCL those with the highest
             # performance using parameter alpha as threshold.
 
-            for c in cl:
-                delta_cost = self.obj_function.evaluate_insertion_cost(c, sol)
-                if delta_cost <= min_cost + self.alpha * (max_cost - min_cost):
-                    rcl.append(c)
+            threshold = min_cost + self.alpha * (max_cost - min_cost)
+            rcl = [cand for cand in cl if eva(cand) <= threshold ]
 
             # Choose a candidate randomly from the RCL
-            rnd_index = self.rng(len(rcl)) # fix random
-            in_cand = rcl[rnd_index]
+            in_cand = self.rng(rcl) # fix random
             cl.remove(in_cand)
             sol.append(in_cand)
             self.obj_function.evaluate(sol)
