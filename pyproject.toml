@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "grasp-python"
+version = "0.1.0"
+description = "Framework para implementação da meta-heuristica GRASP."
+authors = ["Ieremies Romero <ieremies@gmail.com>"]
+packages = [
+         {include = "grasp"},
+         {include = "grasp/**/*.py"}
+]
+[tool.poetry.dependencies]
+python = "^3.10"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
